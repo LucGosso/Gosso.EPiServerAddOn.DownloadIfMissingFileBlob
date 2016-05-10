@@ -1,0 +1,156 @@
+﻿using EPiServer.Framework.Blobs;
+using EPiServer.Web;
+using System;
+using System.Collections.Specialized;
+using System.IO;
+using System.Net;
+using System.Web;
+
+namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
+{
+    public class Provider : FileBlobProvider
+    {
+
+
+        public Provider()
+            : this("[appDataPath]\\blobs")
+        {
+        }
+
+        /// <summary>
+        /// Create a new FileBlobProvider with path
+        /// </summary>
+        /// <param name="path"></param>
+        public Provider(String path) :
+            base(path)
+        {
+        }
+        public override Blob GetBlob(Uri id)
+        {
+            FileBlob b = base.GetBlob(id) as FileBlob;
+            if (HttpContext.Current != null)
+            { //then not interested
+
+                if (HttpContext.Current.Request.Url.ToString().ToLower().Replace("http://", "https://").IndexOf(ProdUrl.ToLower().Replace("http://", "https://")) == -1) // check so it is not the PRODUCTION server
+                {
+                    if (!File.Exists(b.FilePath)) // check if exist on disc
+                    {
+                        FileInfo fi = new FileInfo(b.FilePath);
+                        if (this.RestrictedFileExt.ToLower().IndexOf(fi.Extension.ToLower()) == -1) // check if download this fileextention
+                        {
+
+                            string guid = id.Segments[1].Replace("/", "");
+                            try
+                            {
+                                string url = GetBlobUrl(guid); // get friendly url to file
+
+                                if (!String.IsNullOrEmpty(url) || url.IndexOf("error") > 0)
+                                    DownloadAndSave(b, url);
+                            }
+                            catch (WebException)
+                            {
+                                //nada
+                            }
+                        }
+                    }
+                }
+            }
+            return b;
+        }
+
+        private string GetBlobUrl(string guid)
+        {
+            WebClient webclient = new WebClient(); // using a webrequest to production server since the database is locked in the request and it is a possible chance of eternal loop
+            return webclient.DownloadString(UrlResolverUrl + "?" + guid);
+
+        }
+
+        private void DownloadAndSave(FileBlob blob, string rawurl)
+        {
+
+            WebRequest request = WebRequest.Create(ProdUrl + rawurl);
+            WebResponse response = request.GetResponse();
+            Stream dataStream = response.GetResponseStream();
+            blob.Write(dataStream); //thats it
+
+        }
+
+
+        //private IContentRepository _contentRepository;
+
+        /// <summary>
+        /// Initialize the provider
+        /// </summary>
+        /// <param name="name">name of provider</param>
+        /// <param name="config">provider settings</param>
+        public override void Initialize(string name, NameValueCollection config)
+        {
+
+            if (config.Get("path") != null)
+            {
+                Path = VirtualPathUtilityEx.RebasePhysicalPath(config.Get("path"));
+            }
+
+
+            if (config.Get("UrlResolverUrl") != null)
+            {
+                UrlResolverUrl = config.Get("UrlResolverUrl");
+            }
+            else
+                EPiServer.Framework.Validator.ThrowIfNullOrEmpty("UrlResolverUrl", UrlResolverUrl);
+
+            if (config.Get("ProdUrl") != null)
+            {
+                ProdUrl = config.Get("ProdUrl");
+            }
+            else
+                EPiServer.Framework.Validator.ThrowIfNullOrEmpty("ProdUrl", ProdUrl);
+
+            if (config.Get("RestrictedFileExt") != null)
+            {
+                RestrictedFileExt = config.Get("RestrictedFileExt");
+            }
+
+            //
+            base.Initialize(name, config);
+        }
+
+        /// <summary>
+        /// Path to blob repository, default is "[appDataPath]\\blobs"
+        /// </summary>
+        public new string Path
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
+        /// Url to Production Server where blob should be downloaded
+        /// </summary>
+        public string ProdUrl
+        {
+            get;
+            internal set;
+        }
+
+        /// <summary>
+        /// Absolute Url to UrlResolver.ashx on Production Server
+        /// </summary>
+        public string UrlResolverUrl
+        {
+            get;
+            internal set;
+        }
+
+
+        /// <summary>
+        /// Restiction to fileextentions NOT do be downloaded. eg ".doc.docx.html.exe"
+        /// </summary>
+        public string RestrictedFileExt
+        {
+            get;
+            internal set;
+        }
+
+    }
+}
