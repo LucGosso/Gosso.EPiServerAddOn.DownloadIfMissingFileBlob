@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadIfMissingFileBlob", "EpiserverDownloadIfMissingFileBlobProvider\DownloadIfMissingFileBlob.csproj", "{B7AB7466-21B5-421F-8442-83312BA08601}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadIfMissingFileBlob", "Project\DownloadIfMissingFileBlob.csproj", "{B7AB7466-21B5-421F-8442-83312BA08601}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
