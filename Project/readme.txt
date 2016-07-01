@@ -1,9 +1,10 @@
 ## Remember the configuration
 
 Check out web.config <episerver.framework><blob><providers> 
-Change **UrlResolverUrl** and **ProdUrl** to your public production server address.
+Change **ProdUrl** to your public production server address.
 
-Make a deploy of urlresolver.ashx and the dll to that production server.  
+You will need release the addon (dll) on the production server before you give it a try.
+  - The easy way, drop the dll in bin-folder on prodserver.
 
 Enjoy!  
 

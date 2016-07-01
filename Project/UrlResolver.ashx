@@ -1,1 +1,1 @@
-﻿<%@ WebHandler Language="C#" Class="Gosso.EPiServerAddOn.DownloadIfMissingFileBlob.UrlResolverHelper" %>
+﻿<%@ WebHandler Language="C#" Class="Gosso.EPiServerAddOn.DownloadIfMissingFileBlob.UrlResolverHelper, Gosso.EPiServerAddOn.DownloadIfMissingFileBlob" %>

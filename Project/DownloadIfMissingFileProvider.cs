@@ -1,16 +1,20 @@
-﻿using EPiServer.Framework.Blobs;
+﻿using EPiServer.Core;
+using EPiServer.Framework.Blobs;
 using EPiServer.Web;
 using System;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Web;
+using System.Web.Routing;
 
 namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
 {
+
     public class Provider : FileBlobProvider
     {
 
+        public const string DefaultUrl = "modules/Gosso.EPiServerAddOn.DownloadIfMissingFileBlob/UrlResolver.ashx";
 
         public Provider()
             : this("[appDataPath]\\blobs")
@@ -28,10 +32,10 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
         public override Blob GetBlob(Uri id)
         {
             FileBlob b = base.GetBlob(id) as FileBlob;
-            if (HttpContext.Current != null)
+            if (HttpContext.Current != null && Activated)
             { //then not interested
 
-                if (HttpContext.Current.Request.Url.ToString().ToLower().Replace("http://", "https://").IndexOf(ProdUrl.ToLower().Replace("http://", "https://")) == -1) // check so it is not the PRODUCTION server
+                if (!checkIfProdServer()) // check so it is NOT the PRODUCTION server, lack if multidomain.
                 {
                     if (!File.Exists(b.FilePath)) // check if exist on disc
                     {
@@ -58,10 +62,19 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
             return b;
         }
 
+        /// <summary>
+        /// todo: lack of check if multis
+        /// </summary>
+        /// <returns></returns>
+        private bool checkIfProdServer()
+        {
+            return HttpContext.Current.Request.Url.ToString().ToLower().Replace("http://", "https://").StartsWith(ProdUrl.ToLower().Replace("http://", "https://"));
+        }
+
         private string GetBlobUrl(string guid)
         {
             WebClient webclient = new WebClient(); // using a webrequest to production server since the database is locked in the request and it is a possible chance of eternal loop
-            return webclient.DownloadString(UrlResolverUrl + "?" + guid);
+            return webclient.DownloadString(ProdUrl + UrlResolverUrl + "?" + guid);
 
         }
 
@@ -76,8 +89,6 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
         }
 
 
-        //private IContentRepository _contentRepository;
-
         /// <summary>
         /// Initialize the provider
         /// </summary>
@@ -91,24 +102,34 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
                 Path = VirtualPathUtilityEx.RebasePhysicalPath(config.Get("path"));
             }
 
+            if (config.Get("Activated") != null)
+            {
+                Activated = bool.Parse(config.Get("Activated").ToLower());
+            }
+            else
+                Activated = false;
+
 
             if (config.Get("UrlResolverUrl") != null)
             {
                 UrlResolverUrl = config.Get("UrlResolverUrl");
             }
             else
-                EPiServer.Framework.Validator.ThrowIfNullOrEmpty("UrlResolverUrl", UrlResolverUrl);
+                UrlResolverUrl = DefaultUrl;
 
-            if (config.Get("ProdUrl") != null)
+            if (Activated)
             {
-                ProdUrl = config.Get("ProdUrl");
-            }
-            else
-                EPiServer.Framework.Validator.ThrowIfNullOrEmpty("ProdUrl", ProdUrl);
+                if (config.Get("ProdUrl") != null)
+                {
+                    ProdUrl = config.Get("ProdUrl");
+                }
+                else
+                    EPiServer.Framework.Validator.ThrowIfNullOrEmpty("ProdUrl", ProdUrl);
 
-            if (config.Get("RestrictedFileExt") != null)
-            {
-                RestrictedFileExt = config.Get("RestrictedFileExt");
+                if (config.Get("RestrictedFileExt") != null)
+                {
+                    RestrictedFileExt = config.Get("RestrictedFileExt");
+                }
             }
 
             //
@@ -134,12 +155,21 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
         }
 
         /// <summary>
-        /// Absolute Url to UrlResolver.ashx on Production Server
+        /// Absolute Url to UrlResolver.ashx on Production Server, default is Provider.DefaultUrl = "modules/Gosso.EPiServerAddOn.DownloadIfMissingFileBlob/UrlResolver.ashx";
         /// </summary>
         public string UrlResolverUrl
         {
             get;
             internal set;
+        }
+
+        /// <summary>
+        /// If the AddOn is activated or not.
+        /// </summary>
+        public bool Activated
+        {
+            get;
+            set;
         }
 
 
