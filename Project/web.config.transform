@@ -4,6 +4,7 @@
       <blob defaultProvider="MissingFileBlobProvider">
         <providers>
           <add name="MissingFileBlobProvider"
+               Activated="false"
                ProdUrl="http://www.gosso.se/"
                UrlResolverUrl="modules/Gosso.EPiServerAddOn.DownloadIfMissingFileBlob/UrlResolver.ashx"
                RestrictedFileExt=".docx.doc.pdf.exe.zip.mov.mp4"

@@ -1,5 +1,5 @@
 # FileBlob Provider AddOn for EPiServer Developers
-**Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob**
+**Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob** Version 1.1 (2016-07-01)
 
 **Applicable to CMS >7.5 (MVC or Webforms) - tested with CMS9.6.1**
 
@@ -48,7 +48,7 @@ Yes, initially on application load, it will take some time to download the loade
 1.	You will need release the addon (dll) on the production server before you give it a try.
   - The easy way, drop the dll in bin-folder!
 2.	Do not configure the provider in web.config <episerver.framework>
-    (or episerverframwork.config) on the production server (even though we have a smaller built in check if it is in production to prevent loops.) OR set it Activated=false
+    (or episerverframwork.config) on the production server (even though we have a smaller built in check if it is in production to prevent loops.) OR you may set Activated=false
 3.	The production server must be active/public reachable
 4.	The files must be public reachable thru a public url
 
@@ -61,7 +61,7 @@ You can also download the source code project and add it to your solution, there
 
 If you want to change the default URLResolver path, you may use this web.config and change the **UrlResolverUrl**
 ```
-  <location path="modules/Gosso.EPiServerAddOn.DownloadIfMissingFileBlob/">
+  <location path="modules/Gosso.EPiServerAddOn.DownloadIfMissingFileBlob">
     <system.webServer>
       <handlers>
         <add name="DownloadIfMissingFileBlob" path="/modules/Gosso.EPiServerAddOn.DownloadIfMissingFileBlob/UrlResolver.ashx" verb="GET" type="Gosso.EPiServerAddOn.DownloadIfMissingFileBlob.UrlResolverHelper, Gosso.EpiserverAddOn.DownloadIfMissingFileBlob" />
