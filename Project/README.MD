@@ -35,6 +35,7 @@ Yes, initially on application load, it will take some time to download the loade
 	<blob defaultProvider="MissingFileBlobProvider">
 		<providers>
 			<add name="MissingFileBlobProvider"
+			    Activated="true"
 				ProdUrl="http://www.gosso.se/"
 				UrlResolverUrl="modules/Gosso.EpiserverAddOn.DownloadIfMissingFileBlob/urlresolver.ashx"
 				RestrictedFileExt=".docx.doc.pdf.exe.zip.mov.mp4"
