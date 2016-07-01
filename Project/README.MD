@@ -56,6 +56,8 @@ Yes, initially on application load, it will take some time to download the loade
 ## Installation
 Under the release tab you may download the nuget package to your local feed for installation with package manager console in Visual Studio. It will install one file, the Gosso.EPiServerAddOn.MissingFileBlobProvider.dll into the bin folder. Also configure episerverframework.config/web.config with the MissingFileBlob.
 
+In Package Manager Console i recommend 'install-package Gosso.EPiServerAddOn.DownloadIfMissingFileBlobProvider **-IgnoreDependencies**' if you have compatibily problems. It is dependent to EPiServer.
+
 You can also download the source code project and add it to your solution, therefore you may easily debug it if needed.
 
 ## Customization
