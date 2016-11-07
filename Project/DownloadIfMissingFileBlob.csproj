@@ -37,14 +37,17 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EPiServer">
-      <HintPath>..\..\..\workspace\Holmen_v8\packages\EPiServer.CMS.Core.9.6.1\lib\net45\EPiServer.dll</HintPath>
+    <Reference Include="EPiServer, Version=9.6.1.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Referenced\EPiServer.dll</HintPath>
     </Reference>
-    <Reference Include="EPiServer.Data">
-      <HintPath>..\..\..\workspace\Holmen_v8\packages\EPiServer.Framework.9.6.1\lib\net45\EPiServer.Data.dll</HintPath>
+    <Reference Include="EPiServer.Data, Version=9.6.1.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Referenced\EPiServer.Data.dll</HintPath>
     </Reference>
-    <Reference Include="EPiServer.Framework">
-      <HintPath>..\..\..\workspace\Holmen_v8\packages\EPiServer.Framework.9.6.1\lib\net45\EPiServer.Framework.dll</HintPath>
+    <Reference Include="EPiServer.Framework, Version=9.6.1.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Referenced\EPiServer.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -76,6 +79,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="readme.txt" />
+    <Content Include="Referenced\EPiServer.Data.dll" />
+    <Content Include="Referenced\EPiServer.dll" />
+    <Content Include="Referenced\EPiServer.Framework.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
