@@ -48,7 +48,7 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
                             {
                                 string url = GetBlobUrl(guid); // get friendly url to file
 
-                                if (!String.IsNullOrEmpty(url) || url.IndexOf("error") > 0)
+                                if (!String.IsNullOrEmpty(url) && url.IndexOf("error") == -1) //error if not configured in prodserver, just hope the url does'nt consist of "error"
                                     DownloadAndSave(b, url);
                             }
                             catch (WebException)
@@ -82,9 +82,12 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
         {
 
             WebRequest request = WebRequest.Create(ProdUrl + rawurl);
-            WebResponse response = request.GetResponse();
-            Stream dataStream = response.GetResponseStream();
-            blob.Write(dataStream); //thats it
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode == HttpStatusCode.OK) //yeah, sometimes not published or deleted, or wrong url //todo: display default image?
+            {
+                Stream dataStream = response.GetResponseStream();
+                blob.Write(dataStream); //thats it
+            }
 
         }
 
