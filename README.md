@@ -16,7 +16,7 @@ When the EPiServer CMS page is binding the model to the page, the Provider GetBl
 
 *this ashx webhandler is automaticly added on init
 
-*The DownloadIfMissingFileBlobProvider is using a web request to the ashx on the production server since the local database is locked (because of possible chance of eternal loop) during request and we don’t have the possibility to find out the friendly URL to the file.
+*The DownloadIfMissingFileBlobProvider is using a web request to the ashx on the production server since the local database is locked (because of possible risk of eternal loop) during request and we don’t have the possibility to find out the friendly URL to the file.
 
 ## Performance overload
 Yes, initially on application load, it will take some time to download the loaded files.
