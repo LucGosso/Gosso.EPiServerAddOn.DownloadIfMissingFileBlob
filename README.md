@@ -1,7 +1,9 @@
 # FileBlob Provider AddOn for EPiServer Developers
 **Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob** Version 1.1.1 (2016-11-07)
 
-**Applicable to CMS >7.5 (MVC or Webforms) - tested with CMS9.6.1 and CMS 10.0.1.0 NOT TESTED ON AZURE File Storage** 
+**Applicable to CMS >7.5 (MVC or Webforms) - tested with CMS9.6.1 and CMS 10.0.1.0**
+
+**NOT TESTED with AZURE File Storage**
 
 ## Why?
 Ever restored the Production database to your developer environment and got a website without images? This lightweight AddOn keeps your local environment blob directory up to date.
