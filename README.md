@@ -3,7 +3,7 @@
 
 **Applicable to CMS >7.5 (MVC or Webforms) - tested with CMS9.6.1 and CMS 10.0.1.0**
 
-**NOT TESTED with AZURE File Storage**
+**NOT TESTED with AZURE File Storage Nor with ImageVault**
 
 ## Why?
 Ever restored the Production database to your developer environment and got a website without images? This lightweight AddOn keeps your local environment blob directory up to date.
