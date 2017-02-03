@@ -14,8 +14,9 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
     public class Provider : FileBlobProvider
     {
 
-        public const string DefaultUrl = "modules/Gosso.EPiServerAddOn.DownloadIfMissingFileBlob/UrlResolver.ashx";
-
+        public const string DefaultUrl = "modules/Gosso.EPiServerAddOn.DownloadIfMissingFileBlob/{UrlResolver}";
+        //important to override with an "action" (that can be anything), not to cause it to be a default route so MVC will use it default when used with @Ajax.ActionLink and sometimes xforms action url
+ 
         public Provider()
             : this("[appDataPath]\\blobs")
         {
