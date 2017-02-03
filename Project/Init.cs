@@ -9,8 +9,8 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
     public class Init : IInitializableModule
     {
         public void Initialize(InitializationEngine context)
-        {
-            RouteTable.Routes.Add(new Route
+        {        
+            RouteTable.Routes.Add("Gosso.EPiServerAddOn.DownloadIfMissingFileBlob", new Route
             (
                 Provider.DefaultUrl,
                 new UrlResolverHelper()
