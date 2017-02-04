@@ -1,9 +1,9 @@
 # FileBlob Provider AddOn for EPiServer Developers
-**Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob** Version 1.1.1 (2016-11-07)
+**Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob** Version 1.3 (2017-02-04)
 
 **Applicable to CMS >7.5 (MVC or Webforms) - tested with CMS9.6.1 and CMS 10.0.1.0** 
 
-**NOT TESTED with AZURE File Storage**
+**NOT TESTED with AZURE File Storage or with ImageVault**
 
 ## Why?
 Ever restored the Production database to your developer environment and got a website without images? This lightweight AddOn keeps your local environment blob directory up to date.
@@ -65,6 +65,7 @@ You can also download the source code project and add it to your solution, there
 ## Customization
 
 If you want to change the default URLResolver path, you may use this web.config and change the **UrlResolverUrl**
+Also put the file urlresolver.ashx at that place
 ```
   <location path="modules/Gosso.EPiServerAddOn.DownloadIfMissingFileBlob">
     <system.webServer>

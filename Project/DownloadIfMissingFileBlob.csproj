@@ -41,7 +41,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Referenced\EPiServer.dll</HintPath>
     </Reference>
-    <Reference Include="EPiServer.Data, Version=9.6.1.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
+    <Reference Include="EPiServer.Data, Version=10.0.1.0, Culture=neutral, PublicKeyToken=8fe83dea738b45b7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Referenced\EPiServer.Data.dll</HintPath>
     </Reference>
