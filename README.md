@@ -1,9 +1,11 @@
 # FileBlob Provider AddOn for EPiServer Developers
-**Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob** Version 1.1.1 (2016-11-07)
+**Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob** Version 1.3 (2017-02-04)
 
-**Applicable to CMS >7.5 (MVC or Webforms) - tested with CMS9.6.1 and CMS 10.0.1.0**
+[![Platform](https://img.shields.io/badge/Episerver-%207.6+-orange.svg?style=flat)](http://world.episerver.com/cms/) [![Platform](https://img.shields.io/badge/Episerver-%2010.0-green.svg?style=flat)](http://world.episerver.com/cms/)
 
-**NOT TESTED with AZURE File Storage Nor with ImageVault**
+**Applicable to CMS >7.5 (MVC or Webforms) - tested with CMS9.6.1 and compiled with CMS 10.0.1.0** 
+
+**NOT TESTED with AZURE File Storage or with ImageVault**
 
 ## Why?
 Ever restored the Production database to your developer environment and got a website without images? This lightweight AddOn keeps your local environment blob directory up to date.
@@ -58,13 +60,14 @@ Yes, initially on application load, it will take some time to download the loade
 ## Installation
 Under the release tab you may download the nuget package to your local feed for installation with package manager console in Visual Studio. It will install one file, the Gosso.EPiServerAddOn.MissingFileBlobProvider.dll into the bin folder. Also configure episerverframework.config/web.config with the MissingFileBlob.
 
-In Package Manager Console I recommend 'install-package Gosso.EPiServerAddOn.DownloadIfMissingFileBlobProvider **-IgnoreDependencies**' if you have compatibility problems. It is dependent to EPiServer.
+In Package Manager Console i recommend 'install-package Gosso.EPiServerAddOn.DownloadIfMissingFileBlobProvider **-IgnoreDependencies**' if you have compatibility problems. It is dependent to EPiServer.
 
 You can also download the source code project and add it to your solution, therefore you may easily debug it if needed.
 
 ## Customization
 
 If you want to change the default URLResolver path, you may use this web.config and change the **UrlResolverUrl**
+Also put the file urlresolver.ashx at that place
 ```
   <location path="modules/Gosso.EPiServerAddOn.DownloadIfMissingFileBlob">
     <system.webServer>
@@ -74,3 +77,16 @@ If you want to change the default URLResolver path, you may use this web.config 
     </system.webServer>
   </location>
 ```
+
+**If you have lower version then 10 add assemblyBindings:**
+
+        <dependentAssembly>
+        <assemblyIdentity name="EPiServer" publicKeyToken="8fe83dea738b45b7" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-10.0.1.0" newVersion="your version" />
+        </dependentAssembly>
+
+        <dependentAssembly>
+        <assemblyIdentity name="EPiServer.Framework" publicKeyToken="8fe83dea738b45b7" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-10.0.1.0" newVersion="your version" />
+        </dependentAssembly>
+
