@@ -1,12 +1,10 @@
-﻿using EPiServer.Core;
-using EPiServer.Framework.Blobs;
+﻿using EPiServer.Framework.Blobs;
 using EPiServer.Web;
 using System;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Web;
-using System.Web.Routing;
 
 namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
 {
