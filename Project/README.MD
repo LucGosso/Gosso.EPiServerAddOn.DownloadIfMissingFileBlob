@@ -1,7 +1,7 @@
 # FileBlob Provider AddOn for EPiServer Developers
 **Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob** Version 1.3 (2017-02-04)
 
-[![Platform](https://img.shields.io/badge/Episerver-%207.6+-orange.svg?style=flat)](http://world.episerver.com/cms/) [![Platform](https://img.shields.io/badge/Episerver-%209.0-green.svg?style=flat)](http://world.episerver.com/cms/)[![Platform](https://img.shields.io/badge/Episerver-%2010.0-green.svg?style=flat)](http://world.episerver.com/cms/)
+[![Platform](https://img.shields.io/badge/Episerver-%207.6+-orange.svg?style=flat)](http://world.episerver.com/cms/) [![Platform](https://img.shields.io/badge/Episerver-%2010.0-green.svg?style=flat)](http://world.episerver.com/cms/)
 
 **Applicable to CMS >7.5 (MVC or Webforms) - tested with CMS9.6.1 and compiled with CMS 10.0.1.0** 
 
