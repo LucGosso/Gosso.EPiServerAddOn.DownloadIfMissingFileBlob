@@ -6,6 +6,7 @@
 **Applicable to CMS >9.0 (MVC or Webforms) - tested with CMS9.6.1 and CMS 10.0.1.0, compiled with CMS 9** 
 
 **NOT TESTED with AZURE File Storage**
+
 **Work side by side with Imagevault but is not copying vault images**
 
 ## Why?
