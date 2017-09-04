@@ -4,6 +4,8 @@ using System;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
@@ -34,21 +36,29 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
             if (HttpContext.Current != null && Activated)
             { //then not interested
 
-                if (!checkIfProdServer()) // check so it is NOT the PRODUCTION server, lack if multidomain.
+                if (!CheckIfProdServer()) // check so it is NOT the PRODUCTION server, lack if multidomain.
                 {
                     if (!File.Exists(b.FilePath)) // check if exist on disc
                     {
                         FileInfo fi = new FileInfo(b.FilePath);
-                        if (this.RestrictedFileExt.ToLower().IndexOf(fi.Extension.ToLower()) == -1) // check if download this fileextention
+                        if (this.RestrictedFileExt.ToLower().IndexOf(fi.Extension.ToLower(), StringComparison.Ordinal) == -1) // check if download this fileextention
                         {
 
                             string guid = id.Segments[1].Replace("/", "");
                             try
                             {
-                                string url = GetBlobUrl(guid); // get friendly url to file
+                                string url = GetUrlAsync(guid).Result; // get friendly url to file
 
-                                if (!String.IsNullOrEmpty(url) && url.IndexOf("error") == -1) //error if not configured in prodserver, just hope the url does'nt consist of "error"
-                                    DownloadAndSave(b, url);
+                                if (!String.IsNullOrEmpty(url) && url.IndexOf("error", StringComparison.OrdinalIgnoreCase) == -1)
+                                {
+                                    int intIsSmallImage = b.FilePath.IndexOf("_", StringComparison.Ordinal); //check if it thumbnail
+                                    if (intIsSmallImage > 0)
+                                    {
+                                        url += "/" + b.FilePath.ToLower().Substring(intIsSmallImage + 1, b.FilePath.Length - intIsSmallImage - 1)
+                                                   .Replace(fi.Extension.ToLower(), "");
+                                    }
+                                    Task.Run(() => DownloadAndSave(b, url));
+                                }
                             }
                             catch (WebException)
                             {
@@ -62,34 +72,31 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
         }
 
         /// <summary>
-        /// todo: lack of check if multis
+        /// todo: lack of check if multisite
         /// </summary>
         /// <returns></returns>
-        private bool checkIfProdServer()
+        private bool CheckIfProdServer()
         {
             return HttpContext.Current.Request.Url.ToString().ToLower().Replace("http://", "https://").StartsWith(ProdUrl.ToLower().Replace("http://", "https://"));
         }
 
-        private string GetBlobUrl(string guid)
+        private async Task<string> GetUrlAsync(string guid)
         {
-            WebClient webclient = new WebClient(); // using a webrequest to production server since the database is locked in the request and it is a possible chance of eternal loop
-            return webclient.DownloadString(ProdUrl + UrlResolverUrl + "?" + guid);
-
+            var client = new HttpClient();
+            var html = await client.GetAsync(ProdUrl + UrlResolverUrl + "?" + guid).Result.Content.ReadAsStringAsync();
+            return html;
         }
 
-        private void DownloadAndSave(FileBlob blob, string rawurl)
+        private async void DownloadAndSave(FileBlob blob, string rawurl)
         {
-
-            WebRequest request = WebRequest.Create(ProdUrl + rawurl);
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            if (response.StatusCode == HttpStatusCode.OK) //yeah, sometimes not published or deleted, or wrong url //todo: display default image?
+            var client = new HttpClient();
+            var response = await client.GetAsync(ProdUrl + rawurl);
+            if (response.StatusCode == HttpStatusCode.OK) //yeah, sometimes not published or deleted, or wrong url //todo: display default image? no, it may be a temporary error or internet is offline
             {
-                Stream dataStream = response.GetResponseStream();
+                Stream dataStream = await response.Content.ReadAsStreamAsync();
                 blob.Write(dataStream); //thats it
             }
-
         }
-
 
         /// <summary>
         /// Initialize the provider
