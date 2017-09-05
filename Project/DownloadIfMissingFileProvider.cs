@@ -1,5 +1,6 @@
 ﻿using EPiServer.Framework.Blobs;
 using EPiServer.Web;
+using log4net;
 using System;
 using System.Collections.Specialized;
 using System.IO;
@@ -13,10 +14,12 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
 
     public class Provider : FileBlobProvider
     {
+        private static readonly ILog Logger =
+            LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public const string DefaultUrl = "modules/Gosso.EPiServerAddOn.DownloadIfMissingFileBlob/{UrlResolver}";
         //important to override with an "action" (that can be anything), not to cause it to be a default route so MVC will use it default when used with @Ajax.ActionLink and sometimes xforms action url
- 
+
         public Provider()
             : this("[appDataPath]\\blobs")
         {
@@ -30,18 +33,22 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
             base(path)
         {
         }
+
         public override Blob GetBlob(Uri id)
         {
             FileBlob b = base.GetBlob(id) as FileBlob;
-            if (HttpContext.Current != null && Activated)
-            { //then not interested
+            if (HttpContext.Current != null && Activated && b != null)
+            {
+                //then not interested
 
                 if (!CheckIfProdServer()) // check so it is NOT the PRODUCTION server, lack if multidomain.
                 {
                     if (!File.Exists(b.FilePath)) // check if exist on disc
                     {
                         FileInfo fi = new FileInfo(b.FilePath);
-                        if (this.RestrictedFileExt.ToLower().IndexOf(fi.Extension.ToLower(), StringComparison.Ordinal) == -1) // check if download this fileextention
+                        if (this.RestrictedFileExt.ToLower()
+                                .IndexOf(fi.Extension.ToLower(), StringComparison.Ordinal) ==
+                            -1) // check if download this fileextention
                         {
 
                             string guid = id.Segments[1].Replace("/", "");
@@ -49,35 +56,54 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
                             {
                                 string url = GetUrlAsync(guid).Result; // get friendly url to file
 
-                                if (!String.IsNullOrEmpty(url) && url.IndexOf("error", StringComparison.OrdinalIgnoreCase) == -1)
+                                if (!String.IsNullOrEmpty(url) &&
+                                    url.IndexOf("error", StringComparison.OrdinalIgnoreCase) == -1)
                                 {
-                                    int intIsSmallImage = b.FilePath.IndexOf("_", StringComparison.Ordinal); //check if it thumbnail
+                                    string filename = fi.Name;
+                                    int intIsSmallImage =
+                                        filename.LastIndexOf("_",
+                                            StringComparison.Ordinal); //check if a image thumbnail or variation
                                     if (intIsSmallImage > 0)
                                     {
-                                        url += "/" + b.FilePath.ToLower().Substring(intIsSmallImage + 1, b.FilePath.Length - intIsSmallImage - 1)
+                                        url += "/" + filename.ToLower()
+                                                   .Substring(intIsSmallImage + 1,
+                                                       filename.Length - intIsSmallImage - 1)
                                                    .Replace(fi.Extension.ToLower(), "");
                                     }
                                     Task.Run(() => DownloadAndSave(b, url));
                                 }
                             }
-                            catch (WebException)
+                            catch (WebException ee)
                             {
                                 //nada
+                                Logger.Error("BlobFile could not be downloaded: " + id, ee);
                             }
                         }
+                        else
+                        {
+                            Logger.Debug(
+                                $"BlobFile type restriction to \"{this.RestrictedFileExt}\", file not downloaded: " +
+                                id);
+                        }
                     }
+                }
+                else
+                {
+                    Logger.Error(
+                        $"Check configuration web.config, seems like the blob module {this.Name} is activated in production. Activated should be false!");
                 }
             }
             return b;
         }
 
         /// <summary>
-        /// todo: lack of check if multisite
+        /// todo: lack of check if multis
         /// </summary>
         /// <returns></returns>
         private bool CheckIfProdServer()
         {
-            return HttpContext.Current.Request.Url.ToString().ToLower().Replace("http://", "https://").StartsWith(ProdUrl.ToLower().Replace("http://", "https://"));
+            return HttpContext.Current.Request.Url.ToString().ToLower().Replace("http://", "https://")
+                .StartsWith(ProdUrl.ToLower().Replace("http://", "https://"));
         }
 
         private async Task<string> GetUrlAsync(string guid)
@@ -91,10 +117,16 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
         {
             var client = new HttpClient();
             var response = await client.GetAsync(ProdUrl + rawurl);
-            if (response.StatusCode == HttpStatusCode.OK) //yeah, sometimes not published or deleted, or wrong url //todo: display default image? no, it may be a temporary error or internet is offline
+            if (response.StatusCode == HttpStatusCode.OK
+            ) //yeah, sometimes not published or deleted, or wrong url //todo: display default image? no, it may be a temporary error or internet is offline
             {
                 Stream dataStream = await response.Content.ReadAsStreamAsync();
                 blob.Write(dataStream); //thats it
+                Logger.Debug("BlobFile downloaded: " + ProdUrl + rawurl);
+            }
+            else
+            {
+                Logger.Error("BlobFile could not be downloaded: " + ProdUrl + rawurl);
             }
         }
 
@@ -124,7 +156,7 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
                 UrlResolverUrl = config.Get("UrlResolverUrl");
             }
             else
-                UrlResolverUrl = DefaultUrl.Replace("{UrlResolver}","urlresolver.ashx");
+                UrlResolverUrl = DefaultUrl;
 
             if (Activated)
             {
@@ -148,48 +180,28 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
         /// <summary>
         /// Path to blob repository, default is "[appDataPath]\\blobs"
         /// </summary>
-        public new string Path
-        {
-            get;
-            internal set;
-        }
+        public new string Path { get; internal set; }
 
         /// <summary>
         /// Url to Production Server where blob should be downloaded
         /// </summary>
-        public string ProdUrl
-        {
-            get;
-            internal set;
-        }
+        public string ProdUrl { get; internal set; }
 
         /// <summary>
         /// Absolute Url to UrlResolver.ashx on Production Server, default is Provider.DefaultUrl = "modules/Gosso.EPiServerAddOn.DownloadIfMissingFileBlob/UrlResolver.ashx";
         /// </summary>
-        public string UrlResolverUrl
-        {
-            get;
-            internal set;
-        }
+        public string UrlResolverUrl { get; internal set; }
 
         /// <summary>
         /// If the AddOn is activated or not.
         /// </summary>
-        public bool Activated
-        {
-            get;
-            set;
-        }
+        public bool Activated { get; set; }
 
 
         /// <summary>
         /// Restiction to fileextentions NOT do be downloaded. eg ".doc.docx.html.exe"
         /// </summary>
-        public string RestrictedFileExt
-        {
-            get;
-            internal set;
-        }
+        public string RestrictedFileExt { get; internal set; }
 
     }
 }

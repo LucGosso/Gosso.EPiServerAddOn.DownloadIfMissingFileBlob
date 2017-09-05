@@ -1,11 +1,15 @@
 # FileBlob Provider AddOn for EPiServer Developers
-**Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob** Version 1.4 (2017-02-07)
+**Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob** version 1.6 (2017-09-05)
 
 [![Platform](https://img.shields.io/badge/Episerver-%209.0+-orange.svg?style=flat)](http://world.episerver.com/cms/) [![Platform](https://img.shields.io/badge/Episerver-%2010.0-green.svg?style=flat)](http://world.episerver.com/cms/)
 
-**Applicable to CMS >9.0 (MVC or Webforms) - tested with CMS9.6.1 and CMS 10.0.1.0, compiled with CMS 9** 
+**Applicable to CMS >9.0 (MVC or Webforms) - tested with CMS9.6.1 and CMS 10.0.1.0, compiled with CMS 9**  
 
-**NOT TESTED with AZURE File Storage or with ImageVault**
+**NOT TESTED with AZURE File Storage**
+
+**Work side by side with Imagevault but is not copying vault images**
+
+**Compatible with ImageResizer.Plugins.EPiServerBlobReader**
 
 ## Why?
 Ever restored the Production database to your developer environment and got a website without images? This lightweight AddOn keeps your local environment blob directory up to date.
@@ -80,4 +84,11 @@ Also put the file urlresolver.ashx at that place
   </location>
 ```
 
+## Debug
 
+use log4net: 
+```
+  <logger name="Gosso" additivity="true">
+    <level value="Debug" />
+  </logger>
+```
