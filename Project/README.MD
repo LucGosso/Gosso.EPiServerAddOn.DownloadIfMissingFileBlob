@@ -1,9 +1,12 @@
 # FileBlob Provider AddOn for EPiServer Developers
-**Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob** version 1.6 (2017-09-05)
+**Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob** version 2.0 (2017-11-22)
 
-[![Platform](https://img.shields.io/badge/Episerver-%209.0+-orange.svg?style=flat)](http://world.episerver.com/cms/) [![Platform](https://img.shields.io/badge/Episerver-%2010.0-green.svg?style=flat)](http://world.episerver.com/cms/)
+[![Platform](https://img.shields.io/badge/Episerver-%209.0+-orange.svg?style=flat)](http://world.episerver.com/cms/) [![Platform](https://img.shields.io/badge/Episerver-%2010.0-green.svg?style=flat)](http://world.episerver.com/cms/) (version 1.6)
 
-**Applicable to CMS >9.0 (MVC or Webforms) - tested with CMS9.6.1 and CMS 10.0.1.0, compiled with CMS 9**  
+[![Platform](https://img.shields.io/badge/Platform-.NET%204.6.1-blue.svg?style=flat)](https://msdn.microsoft.com/en-us/library/w0x726c2%28v=vs.110%29.aspx) [![Platform](https://img.shields.io/badge/Episerver-%2011.1-green.svg?style=flat)](http://world.episerver.com/cms/) (version 2.0)
+
+
+**Applicable to CMS >9.0 (MVC or Webforms) - tested with CMS9.6.1 and CMS 10.0.1.0, compiled with CMS 9, use version 1.6**  
 
 **NOT TESTED with AZURE File Storage**
 
