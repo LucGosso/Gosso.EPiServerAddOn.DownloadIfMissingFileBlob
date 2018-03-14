@@ -3,6 +3,7 @@ using EPiServer.Web;
 using log4net;
 using System;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -19,6 +20,8 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
 
         public const string DefaultUrl = "modules/Gosso.EPiServerAddOn.DownloadIfMissingFileBlob/{UrlResolver}";
         //important to override with an "action" (that can be anything), not to cause it to be a default route so MVC will use it default when used with @Ajax.ActionLink and sometimes xforms action url
+
+        private HttpClient _httpClient;
 
         public Provider()
             : this("[appDataPath]\\blobs")
@@ -108,15 +111,13 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
 
         private async Task<string> GetUrlAsync(string guid)
         {
-            var client = new HttpClient();
-            var html = await client.GetAsync(ProdUrl + UrlResolverUrl + "?" + guid).Result.Content.ReadAsStringAsync();
+            var html = await _httpClient.GetAsync(ProdUrl + UrlResolverUrl + "?" + guid).Result.Content.ReadAsStringAsync();
             return html;
         }
 
         private async void DownloadAndSave(FileBlob blob, string rawurl)
-        {
-            var client = new HttpClient();
-            var response = await client.GetAsync(ProdUrl + rawurl);
+        {   
+            var response = await _httpClient.GetAsync(ProdUrl + rawurl);
             if (response.StatusCode == HttpStatusCode.OK
             ) //yeah, sometimes not published or deleted, or wrong url //todo: display default image? no, it may be a temporary error or internet is offline
             {
@@ -173,7 +174,26 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
                 }
             }
 
-            //
+            // Setup the shared httpClient
+            var cookieContainer = new CookieContainer();            
+            var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
+            _httpClient = new HttpClient(handler);
+
+            if (config.Get("Cookies") != null)
+            {
+                var cookies = config.Get("Cookies").Split(';');
+
+                foreach (var cookie in cookies)
+                {
+                    var splitCookie = cookie.Split('=');
+                    if (splitCookie.Length == 2)
+                    {
+                        cookieContainer.Add(new Uri(ProdUrl), new Cookie(splitCookie[0], splitCookie[1]));
+                        Logger.Debug($"Added Cookie {splitCookie[0]} with value {splitCookie[1]} to requests");
+                    }
+                }
+            }
+            
             base.Initialize(name, config);
         }
 
