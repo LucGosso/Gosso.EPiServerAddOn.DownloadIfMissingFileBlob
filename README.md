@@ -1,5 +1,5 @@
 # FileBlob Provider AddOn for EPiServer Developers
-**Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob** version 2.0 (2017-11-22)
+**Namespace: Gosso.EPiServerAddOn.DownloadIfMissingFileBlob** version 2.1 (2018-03-15)
 
 [![Platform](https://img.shields.io/badge/Episerver-%209.0+-orange.svg?style=flat)](http://world.episerver.com/cms/) [![Platform](https://img.shields.io/badge/Episerver-%2010.0-green.svg?style=flat)](http://world.episerver.com/cms/) (version 1.6)
 
@@ -42,6 +42,7 @@ Yes, initially on application load, it will take some time to download the loade
 **RestrictedFileExt** helps to restrict which files to not download
 
 **Path** to the blob url (default "[appDataPath]\\blobs")
+**Cookies** adds cookies to the request made when getting the blobs in the format of: cookie1=cookieValue1;cookie2=cookieValue2
 
 ```
 <episerver.framework>
@@ -52,11 +53,13 @@ Yes, initially on application load, it will take some time to download the loade
 				ProdUrl="http://www.gosso.se/"
 				UrlResolverUrl="modules/Gosso.EpiserverAddOn.DownloadIfMissingFileBlob/urlresolver.ashx"
 				RestrictedFileExt=".docx.doc.pdf.exe.zip.mov.mp4"
+				Cookies="cookie1=cookieValue1;cookie2=cookieValue2"
 				type="Gosso.EpiserverAddOn.DownloadIfMissingFileBlob.Provider, Gosso.EpiserverAddOn.DownloadIfMissingFileBlob" />
 		</providers>
 	</blob>
 </episerver.framework>
 ```
+
 
 ## Important/troubleshooting 
 1.	You will need release the addon (dll) on the production server before you give it a try.
