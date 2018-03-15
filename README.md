@@ -42,6 +42,7 @@ Yes, initially on application load, it will take some time to download the loade
 **RestrictedFileExt** helps to restrict which files to not download
 
 **Path** to the blob url (default "[appDataPath]\\blobs")
+
 **Cookies** adds cookies to the request made when getting the blobs in the format of: cookie1=cookieValue1;cookie2=cookieValue2
 
 ```
