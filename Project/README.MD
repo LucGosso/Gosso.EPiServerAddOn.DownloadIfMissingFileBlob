@@ -43,6 +43,8 @@ Yes, initially on application load, it will take some time to download the loade
 
 **Path** to the blob url (default "[appDataPath]\\blobs")
 
+**Cookies** adds cookies to the request made when getting the blobs in the format of: cookie1=cookieValue1;cookie2=cookieValue2
+
 ```
 <episerver.framework>
 	<blob defaultProvider="MissingFileBlobProvider">
@@ -52,6 +54,7 @@ Yes, initially on application load, it will take some time to download the loade
 				ProdUrl="http://www.gosso.se/"
 				UrlResolverUrl="modules/Gosso.EpiserverAddOn.DownloadIfMissingFileBlob/urlresolver.ashx"
 				RestrictedFileExt=".docx.doc.pdf.exe.zip.mov.mp4"
+				Cookies="cookie1=cookieValue1;cookie2=cookieValue2"
 				type="Gosso.EpiserverAddOn.DownloadIfMissingFileBlob.Provider, Gosso.EpiserverAddOn.DownloadIfMissingFileBlob" />
 		</providers>
 	</blob>
