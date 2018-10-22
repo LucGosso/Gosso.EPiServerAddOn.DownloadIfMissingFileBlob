@@ -147,7 +147,10 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="README.MD" />
-    <None Include="web.config.transform">
+    <None Include="web.config.uninstall.xdt">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="web.config.install.xdt">
       <SubType>Designer</SubType>
     </None>
     <None Include="App.config">
