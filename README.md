@@ -99,3 +99,8 @@ use log4net:
     <level value="Debug" />
   </logger>
 ```
+
+## Having trouble with log4net? 
+
+Starting from version 2.0.0, EPiServer.Logging.Log4Net uses a log4net version that is not compatible
+with previous version (Nuget version 2.0.3 or assembly version 1.2.13). **Resolution** change to publicKeyToken="669e0ddf0bb1aa2a"
