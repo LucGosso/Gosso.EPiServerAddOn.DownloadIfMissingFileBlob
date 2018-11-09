@@ -69,6 +69,7 @@ Yes, initially on application load, it will take some time to download the loade
     (or episerverframwork.config) on the production server (even though we have a smaller built in check if it is in production to prevent loops.) OR you may set Activated=false
 3.	The production server must be active/public reachable
 4.	The files must be public reachable thru a public url
+5. 	Localy configured the blobs folder with rights
 
 ## Installation
 Under the release tab you may download the nuget package to your local feed for installation with package manager console in Visual Studio. It will install one file, the Gosso.EPiServerAddOn.MissingFileBlobProvider.dll into the bin folder. Also configure episerverframework.config/web.config with the MissingFileBlob.
