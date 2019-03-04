@@ -70,7 +70,7 @@ Yes, initially on application load, it will take some time to download the loade
 3.	The production server must be active/public reachable
 4.	The files must be public reachable thru a public url
 5. 	Localy configured the blobs folder with rights (IIS_IUSRS with Write permisstions)
-6. 	Config new TLS IF needed: ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;//but that in App_Start if you have error like: "System.Net.WebException: The underlying connection was closed"
+6. 	Config new TLS IF needed: ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;//put that in App_Start if you have error like: "System.Net.WebException: The underlying connection was closed"
 
 ## Installation
 Under the release tab you may download the nuget package to your local feed for installation with package manager console in Visual Studio. It will install one file, the Gosso.EPiServerAddOn.MissingFileBlobProvider.dll into the bin folder. Also configure episerverframework.config/web.config with the MissingFileBlob.
