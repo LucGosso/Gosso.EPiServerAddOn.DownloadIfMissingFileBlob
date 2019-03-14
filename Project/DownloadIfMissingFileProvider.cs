@@ -154,10 +154,10 @@ namespace Gosso.EPiServerAddOn.DownloadIfMissingFileBlob
 
             if (config.Get("UrlResolverUrl") != null)
             {
-                UrlResolverUrl = config.Get("UrlResolverUrl");
+                UrlResolverUrl = config.Get("UrlResolverUrl").ToLower();
             }
             else
-                UrlResolverUrl = DefaultUrl;
+                UrlResolverUrl = DefaultUrl.Replace("{UrlResolver}", "urlresolver.ashx").ToLower();
 
             if (Activated)
             {
